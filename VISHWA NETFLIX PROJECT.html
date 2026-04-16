@@ -1,0 +1,1118 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700;1,900&family=Inter:wght@200;300;400;500;600&family=Space+Mono:wght@400;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+
+html,body{width:100%;height:100%;overflow:hidden}
+
+#yfx{
+  width:100%;
+  font-family:'Inter',sans-serif;
+  background:#080808;
+  color:#fff;
+  position:relative;
+  height:100vh;
+  overflow:hidden;
+}
+
+/* ── ALL SCREENS STACK ABSOLUTELY ── */
+.scr{
+  position:absolute;
+  top:0;left:0;
+  width:100%;
+  height:100vh;
+  overflow-y:auto;
+  overflow-x:hidden;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0s;
+  background:#080808;
+}
+.scr.visible{
+  opacity:1;
+  pointer-events:all;
+}
+.scr::-webkit-scrollbar{width:4px}
+.scr::-webkit-scrollbar-track{background:rgba(255,255,255,.03)}
+.scr::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+
+/* ── LOADING SCREEN ── */
+#s-load{
+  background:#080808;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:20px;z-index:999;
+}
+.load-logo{font-family:'Playfair Display',serif;font-size:44px;font-weight:900;font-style:italic;color:#E50914;letter-spacing:-2px;opacity:0;animation:fadeIn .5s .2s forwards}
+.load-tagline{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:5px;color:rgba(255,255,255,.2);opacity:0;animation:fadeIn .4s .6s forwards}
+.load-bar-wrap{width:120px;height:1.5px;background:rgba(255,255,255,.08);border-radius:1px;overflow:hidden;opacity:0;animation:fadeIn .3s .8s forwards}
+.load-fill{height:100%;width:0;background:#E50914;border-radius:1px;animation:barFill 1.2s .9s cubic-bezier(.4,0,.2,1) forwards}
+
+@keyframes barFill{to{width:100%}}
+@keyframes fadeIn{to{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ain{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes floatUD{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes bounce{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-16px) rotate(3deg)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(.96);opacity:.25}}
+@keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.2)}28%{transform:scale(1)}}
+@keyframes starFloat{0%,100%{transform:translateY(0);opacity:.3}50%{transform:translateY(-12px);opacity:.7}}
+
+/* Degree certificates falling from top - Daughter */
+@keyframes certFall{
+  0%{transform:translateY(-100px) rotate(var(--r,0deg));opacity:0}
+  15%{opacity:.8}
+  80%{opacity:.6}
+  100%{transform:translateY(120vh) rotate(calc(var(--r,0deg) + 360deg));opacity:0}
+}
+.cert-particle{
+  position:absolute;
+  pointer-events:none;
+  z-index:1;
+  animation:certFall var(--dur,8s) var(--delay,0s) ease-in infinite;
+}
+
+/* Friend screen-shrink expand intro */
+@keyframes friendIntro{
+  0%{transform:scale(0.12);opacity:0;border-radius:50px}
+  30%{transform:scale(0.12);opacity:1;border-radius:40px}
+  60%{transform:scale(1.06);border-radius:6px}
+  80%{transform:scale(0.97);border-radius:4px}
+  100%{transform:scale(1);border-radius:0px;opacity:1}
+}
+#s-f.intro-anim{animation:friendIntro .7s cubic-bezier(.34,1.3,.64,1) both}
+
+/* ME - disappear/appear glitch intro */
+@keyframes meGlitch{
+  0%{opacity:0;transform:scale(1.04) skewX(3deg)}
+  10%{opacity:1;transform:scale(1) skewX(0deg)}
+  18%{opacity:0;transform:scale(.98) skewX(-2deg)}
+  26%{opacity:1;transform:scale(1.01) skewX(1deg)}
+  34%{opacity:0;transform:scale(.99)}
+  42%{opacity:1;transform:scale(1)}
+  50%{opacity:0}
+  58%{opacity:1;transform:scale(1.005)}
+  66%{opacity:.5}
+  74%{opacity:1}
+  100%{opacity:1;transform:scale(1)}
+}
+#s-m.intro-anim{animation:meGlitch .9s ease both}
+
+/* Lover hearts bubble up */
+@keyframes heartRise{
+  0%{transform:translateY(100%) scale(0.4);opacity:0}
+  15%{opacity:1}
+  80%{opacity:.7}
+  100%{transform:translateY(-120vh) scale(1.2) rotate(var(--r,0deg));opacity:0}
+}
+.heart-bubble{
+  position:absolute;
+  bottom:0;
+  pointer-events:none;
+  z-index:3;
+  font-size:var(--sz,18px);
+  animation:heartRise var(--dur,4s) var(--delay,0s) ease-in infinite;
+  color:rgba(255,80,140,0.7);
+}
+
+/* Lover character small hearts animation */
+@keyframes floatUpHearts {
+  0% { transform: translateY(0) scale(0.5); opacity: 0; }
+  30% { opacity: 1; transform: translateY(-15px) scale(1.2); }
+  100% { transform: translateY(-40px) scale(0.8); opacity: 0; }
+}
+
+/* Dashboard preview animations */
+@keyframes previewPan {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-40px); }
+}
+@keyframes typeDot {
+  0%, 100% { opacity: 0.3; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-2px); }
+}
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(0.95); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+@keyframes puzzleShift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(4px, -2px); }
+}
+
+/* Puzzle background for ME */
+.puzzle-bg{
+  position:absolute;inset:0;z-index:0;pointer-events:none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' width='60' height='60'%3E%3Cpath fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1.5' d='M0 0h30c0-10 20-10 20 0h30v30c10 0 10 20 0 20v30H50c0 10-20 10-20 0H0V50c-10 0-10-20 0-20V0z'/%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+/* ── LANDING ── */
+#s-land{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:30px 40px;text-align:center;
+  background:radial-gradient(ellipse 80% 60% at 50% 50%,#0d0d18 0%,#080808 70%);
+}
+.l-logo{font-family:'Playfair Display',serif;font-size:38px;font-weight:900;font-style:italic;color:#E50914;letter-spacing:-2px;margin-bottom:6px;animation:fadeUp .7s both}
+.l-sub{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:5px;color:rgba(255,255,255,.18);margin-bottom:32px;animation:fadeUp .7s .1s both}
+.l-q{font-family:'Playfair Display',serif;font-size:clamp(28px,3.5vw,48px);font-weight:900;font-style:italic;line-height:1.05;margin-bottom:8px;animation:fadeUp .7s .15s both}
+.l-q span{color:rgba(255,255,255,.22)}
+.l-hint{font-family:'Inter',sans-serif;font-size:12px;font-weight:300;letter-spacing:3px;color:rgba(255,255,255,.22);margin-bottom:36px;animation:fadeUp .7s .2s both}
+
+.pcards{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:14px;width:100%;max-width:960px;
+  animation:fadeUp .7s .3s both;
+}
+.pc{
+  position:relative;border-radius:8px;overflow:hidden;
+  cursor:pointer;aspect-ratio:2/3;
+  transition:transform .35s ease, box-shadow .35s ease;
+}
+.pc-art{position:absolute;inset:0;width:100%;height:100%}
+.pc-grad{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.25) 45%,rgba(0,0,0,.05) 80%);z-index:2}
+.pc-border{position:absolute;inset:0;border-radius:8px;border:1.5px solid transparent;z-index:5;pointer-events:none;transition:border-color .3s}
+.pc-info{position:absolute;bottom:0;left:0;right:0;padding:14px 13px;z-index:4}
+.pc-name{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;font-style:italic;display:block;margin-bottom:3px;color:#fff}
+.pc-tag{font-family:'Space Mono',monospace;font-size:7px;letter-spacing:2px;color:rgba(255,255,255,.35);display:block}
+.pc.daughter:hover{transform:scale(1.02);filter:brightness(.88);transition:transform .55s,filter .55s}
+.pc.friend:hover{transform:scale(1.07) translateY(-6px);transition:transform .18s cubic-bezier(.34,1.56,.64,1)}
+.pc.lover:hover{transform:scale(1.04); box-shadow: 0 0 35px rgba(255,80,140,0.6);}
+.pc.me:hover{transform:scale(1.008);transition:transform .9s}
+.pc.last-on .pc-border{border-color:rgba(229,9,20,.55)}
+.pc:hover .pc-border{border-color:rgba(255,255,255,.15)}
+
+/* Lover girl pink glow on landing card */
+.pc.lover{
+  box-shadow:0 0 0 0 rgba(255,80,140,0);
+}
+.pc.lover::after{
+  content:'';position:absolute;inset:-8px;z-index:-1;border-radius:16px;
+  background:radial-gradient(ellipse 80% 60% at 50% 80%, rgba(255,80,140,.28) 0%, transparent 70%);
+  filter:blur(8px);
+  animation:loverGlow 2.5s ease-in-out infinite;
+}
+@keyframes loverGlow{0%,100%{opacity:.6}50%{opacity:1}}
+
+/* ── NAV ── */
+.nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 48px;position:relative;z-index:40;
+  background:linear-gradient(180deg,rgba(8,8,8,.96) 0%,transparent 100%);
+  flex-shrink:0;
+}
+.logo{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;font-style:italic;color:#E50914;letter-spacing:-1px}
+.nav-tag{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.25)}
+.back-btn{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.45);cursor:pointer;border:.5px solid rgba(255,255,255,.18);padding:7px 14px;border-radius:2px;background:none;transition:all .2s}
+.back-btn:hover{color:#fff;border-color:rgba(255,255,255,.45)}
+/* Nav links */
+.nav-links{display:flex;align-items:center;gap:22px}
+.nav-link{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.3);cursor:pointer;transition:color .2s}
+.nav-link:hover{color:rgba(255,255,255,.7)}
+.nav-right{display:flex;align-items:center;gap:14px}
+
+/* ── HERO ── */
+.hero{padding:6px 48px 18px;position:relative;z-index:10}
+.eyebrow{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:10px;display:flex;align-items:center;gap:12px}
+.eyebrow::after{content:'';flex:1;height:.5px;background:rgba(255,255,255,.07)}
+.h1{font-family:'Playfair Display',serif;font-size:clamp(34px,4vw,58px);font-weight:900;font-style:italic;line-height:.93;letter-spacing:-1px;margin-bottom:12px}
+.hdesc{font-size:13px;line-height:1.7;font-weight:300;color:rgba(255,255,255,.45);max-width:480px;margin-bottom:18px}
+.hbtns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.btn-p{padding:9px 24px;font-size:11px;font-weight:500;border:none;border-radius:3px;cursor:pointer;letter-spacing:.8px;font-family:'Inter',sans-serif;transition:all .2s}
+.btn-s{padding:9px 20px;font-size:11px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:.5px solid rgba(255,255,255,.12);border-radius:3px;cursor:pointer;letter-spacing:.8px;font-family:'Inter',sans-serif;transition:all .2s}
+.btn-s:hover{background:rgba(255,255,255,.14)}
+.hmeta{font-family:'Space Mono',monospace;font-size:8px;color:rgba(255,255,255,.18);letter-spacing:2px}
+
+/* ── ROWS ── */
+.rows{padding:0 48px 32px;position:relative;z-index:10}
+.rb{margin-bottom:24px}
+.rh{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+.raccent{font-family:'Playfair Display',serif;font-size:16px;font-style:italic;opacity:.6;margin-right:2px}
+.rlbl{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:3px;text-transform:uppercase;opacity:.28}
+.rline{flex:1;height:.5px;background:rgba(255,255,255,.06)}
+.cs{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.cs::-webkit-scrollbar{display:none}
+
+/* ── SHOW CARD ── */
+.sc{flex-shrink:0;width:200px;height:126px;border-radius:6px;overflow:hidden;position:relative;cursor:pointer;transition:transform .3s ease}
+.sc svg{position:absolute;inset:0;width:100%;height:100%;display:block; transition:transform 0.4s cubic-bezier(0.3, 1, 0.5, 1)}
+.sc-g{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.08) 55%,transparent 100%);z-index:2}
+.sc-i{position:absolute;bottom:0;left:0;right:0;padding:8px 10px;z-index:3}
+.sc-t{font-family:'Playfair Display',serif;font-size:11px;font-weight:700;color:#fff;display:block;line-height:1.2}
+.sc-m{font-family:'Space Mono',monospace;font-size:7px;color:rgba(255,255,255,.38);display:block;margin-top:2px;letter-spacing:.5px}
+.sc-bar{position:absolute;bottom:0;left:0;height:2.5px;background:rgba(229,9,20,.85);z-index:4}
+
+/* micro-animation overlay on hover */
+.sc::before{
+  content:'▶';position:absolute;top:50%;left:50%;z-index:5;
+  transform:translate(-50%,-50%) scale(0);opacity:0;
+  font-size:22px;color:rgba(255,255,255,.8);
+  transition:all .22s ease;text-shadow:0 0 12px rgba(0,0,0,.6);
+  pointer-events:none;
+}
+.sc:hover::before{transform:translate(-50%,-50%) scale(1);opacity:1}
+.sc:hover{transform:scale(1.04)!important}
+.sc:hover svg{transform:scale(1.08);}
+
+/* persona-specific card hovers */
+.d-sc{filter:saturate(.62)}
+.d-sc:hover{filter:saturate(.88)!important}
+.f-sc:hover{transform:scale(1.12) translateY(-3px)!important;transition:transform .16s cubic-bezier(.34,1.56,.64,1)!important}
+.f-sc:nth-child(even){transform:translateY(7px)}
+.l-sc{border-radius:10px}
+.l-sc:hover{box-shadow:0 8px 28px rgba(255,80,150,.2)!important}
+.me-sc{opacity:.58}
+.me-sc:hover{transform:scale(1.005)!important;transition:transform .9s!important}
+.me-ghost{opacity:.1;pointer-events:none}
+
+/* ── PREVIEW SHOW BOX (Netflix-style) ── */
+.preview-box{
+  margin:0 48px 20px;border-radius:10px;overflow:hidden;height:200px;
+  position:relative;cursor:pointer;
+  transition:transform .3s ease;
+}
+.preview-box:hover{transform:scale(1.008)}
+.preview-box svg{position:absolute;inset:0;width:100%;height:100%}
+.preview-box-fg{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.15) 60%,transparent 100%);z-index:2}
+.preview-box-txt{position:absolute;bottom:0;left:0;padding:22px 26px;z-index:3}
+/* Animated scan line for preview boxes */
+.preview-scan{
+  position:absolute;top:0;left:0;right:0;height:2px;z-index:4;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);
+  animation:previewScan 3s linear infinite;
+}
+@keyframes previewScan{
+  0%{top:0;opacity:0}
+  5%{opacity:1}
+  95%{opacity:1}
+  100%{top:100%;opacity:0}
+}
+
+/* ── CHARACTER ── */
+.char{position:absolute;right:42px;pointer-events:none;z-index:8}
+
+/* ── DAUGHTER BG ── */
+#s-d{background:#070c18}
+/* ── FRIEND BG ── */
+#s-f{background:#0e0707}
+/* ── LOVER BG ── */
+#s-l{background:#0d0510}
+/* ── ME BG ── */
+#s-m{background:#080808}
+
+/* ── FEATURED HERO ── */
+.feat{margin:0 48px 18px;border-radius:10px;overflow:hidden;height:220px;position:relative;cursor:pointer}
+.feat svg{position:absolute;inset:0;width:100%;height:100%}
+.feat-fg{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.88) 0%,rgba(0,0,0,.15) 55%,transparent 100%);z-index:2}
+.feat-txt{position:absolute;bottom:0;left:0;padding:22px 26px;z-index:3}
+
+/* ── HEART CARDS ── */
+.hc{flex-shrink:0;width:180px;height:180px;position:relative;cursor:pointer;clip-path:url(#hclip);transition:transform .4s ease}
+.hc:hover{transform:scale(1.08)}
+.hc svg{position:absolute;inset:0;width:100%;height:100%}
+.hc-g{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.9) 10%,rgba(0,0,0,0.5) 50%,transparent 100%);z-index:2}
+.hc-i{position:absolute;bottom:35px;left:0;right:0;text-align:center;z-index:3;padding:0 8px}
+.hc-t{font-family:'Playfair Display',serif;font-size:12px;font-style:italic;color:rgba(255,200,220,.9);display:block;line-height:1.3}
+.hc-m{font-family:'Space Mono',monospace;font-size:7px;color:rgba(255,150,180,.45);letter-spacing:1px;display:block;margin-top:4px}
+
+.a1{animation:ain .7s .1s both}
+.a2{animation:ain .7s .22s both}
+.a3{animation:ain .7s .36s both}
+.a4{animation:ain .7s .5s both}
+
+/* Lover girl heart shape fix */
+.hc-wrap{
+  display:flex;gap:16px;overflow-x:auto;padding:10px 0 18px;align-items:center;scrollbar-width:none;
+}
+.hc-wrap::-webkit-scrollbar{display:none}
+</style>
+
+<div id="yfx">
+
+<svg width="0" height="0" style="position:absolute;pointer-events:none">
+  <defs>
+    <clipPath id="hclip" clipPathUnits="objectBoundingBox">
+      <path d="M0.5 0.95 L0.2 0.65 C0.05 0.5 0 0.25 0.2 0.1 C0.35 -0.05 0.5 0.15 0.5 0.15 C0.5 0.15 0.65 -0.05 0.8 0.1 C1 0.25 0.95 0.5 0.8 0.65 Z"/>
+    </clipPath>
+  </defs>
+</svg>
+
+<div id="s-load" class="scr visible">
+  <div class="load-logo">youflix</div>
+  <div class="load-tagline">a streaming identity</div>
+  <div class="load-bar-wrap"><div class="load-fill"></div></div>
+</div>
+
+<div id="s-land" class="scr">
+  <div id="ptcls" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0"></div>
+  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;width:100%">
+    <div class="l-logo">youflix</div>
+    <div class="l-sub">a streaming identity</div>
+    <div class="l-q">who are you <span>today?</span></div>
+    <div class="l-hint">enter as yourself</div>
+    <div class="pcards">
+
+      <div class="pc daughter" data-to="s-d">
+        <svg class="pc-art" viewBox="0 0 260 390" xmlns="http://www.w3.org/2000/svg">
+          <rect width="260" height="390" fill="#0b1428"/>
+          <line x1="0" y1="78" x2="260" y2="78" stroke="rgba(100,150,255,.07)" stroke-width=".5"/>
+          <line x1="0" y1="156" x2="260" y2="156" stroke="rgba(100,150,255,.07)" stroke-width=".5"/>
+          <line x1="0" y1="234" x2="260" y2="234" stroke="rgba(100,150,255,.07)" stroke-width=".5"/>
+          <line x1="65" y1="0" x2="65" y2="390" stroke="rgba(100,150,255,.07)" stroke-width=".5"/>
+          <line x1="130" y1="0" x2="130" y2="390" stroke="rgba(100,150,255,.07)" stroke-width=".5"/>
+          <line x1="195" y1="0" x2="195" y2="390" stroke="rgba(100,150,255,.07)" stroke-width=".5"/>
+          <rect x="90" y="200" width="80" height="110" rx="6" fill="#1e3a7a"/>
+          <rect x="116" y="178" width="28" height="26" rx="4" fill="#d4a882"/>
+          <ellipse cx="130" cy="155" rx="42" ry="46" fill="#d4a882"/>
+          <ellipse cx="88" cy="158" rx="10" ry="14" fill="#d4a882"/>
+          <ellipse cx="172" cy="158" rx="10" ry="14" fill="#d4a882"/>
+          <path d="M88 140 Q90 100 130 95 Q170 100 172 140 Q160 120 130 118 Q100 120 88 140Z" fill="#2a1a08"/>
+          <path d="M88 140 Q80 150 84 170 Q90 145 95 150Z" fill="#2a1a08"/>
+          <path d="M172 140 Q180 150 176 170 Q170 145 165 150Z" fill="#2a1a08"/>
+          <rect x="106" y="147" width="22" height="16" rx="5" fill="none" stroke="rgba(150,180,255,.5)" stroke-width="1.5"/>
+          <rect x="132" y="147" width="22" height="16" rx="5" fill="none" stroke="rgba(150,180,255,.5)" stroke-width="1.5"/>
+          <line x1="128" y1="155" x2="132" y2="155" stroke="rgba(150,180,255,.5)" stroke-width="1.5"/>
+          <ellipse cx="116" cy="153" rx="7" ry="7.5" fill="#fff"/>
+          <ellipse cx="144" cy="153" rx="7" ry="7.5" fill="#fff"/>
+          <ellipse cx="116" cy="154" rx="4.5" ry="5" fill="#3d2010"/>
+          <ellipse cx="144" cy="154" rx="4.5" ry="5" fill="#3d2010"/>
+          <circle cx="118" cy="152" r="1.5" fill="#fff"/>
+          <circle cx="146" cy="152" r="1.5" fill="#fff"/>
+          <line x1="108" y1="143" x2="124" y2="143" stroke="#2a1a08" stroke-width="2" stroke-linecap="round"/>
+          <line x1="136" y1="143" x2="152" y2="143" stroke="#2a1a08" stroke-width="2" stroke-linecap="round"/>
+          <path d="M120 170 Q130 167 140 170" stroke="#b07860" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <rect x="56" y="204" width="34" height="16" rx="7" fill="#d4a882" transform="rotate(15 73 212)"/>
+          <rect x="170" y="204" width="34" height="16" rx="7" fill="#d4a882" transform="rotate(-15 187 212)"/>
+          <rect x="54" y="218" width="28" height="36" rx="2" fill="#e8d090" stroke="#c0a840" stroke-width="1"/>
+          <line x1="60" y1="224" x2="76" y2="224" stroke="rgba(100,80,20,.3)" stroke-width="1"/>
+          <line x1="60" y1="230" x2="76" y2="230" stroke="rgba(100,80,20,.3)" stroke-width="1"/>
+          <line x1="60" y1="236" x2="76" y2="236" stroke="rgba(100,80,20,.3)" stroke-width="1"/>
+          <rect x="94" y="308" width="28" height="60" rx="4" fill="#1e3068"/>
+          <rect x="138" y="308" width="28" height="60" rx="4" fill="#1e3068"/>
+          <ellipse cx="108" cy="368" rx="16" ry="8" fill="#222"/>
+          <ellipse cx="152" cy="368" rx="16" ry="8" fill="#222"/>
+        </svg>
+        <div class="pc-grad"></div><div class="pc-border"></div>
+        <div class="pc-info"><span class="pc-name">daughter</span><span class="pc-tag">structured · held in</span></div>
+      </div>
+
+      <div class="pc friend" data-to="s-f">
+        <svg class="pc-art" viewBox="0 0 260 390" xmlns="http://www.w3.org/2000/svg">
+          <rect width="260" height="390" fill="#160a0a"/>
+          <circle cx="50" cy="60" r="35" fill="rgba(200,60,40,.12)"/>
+          <circle cx="210" cy="320" r="45" fill="rgba(180,40,30,.08)"/>
+          <rect x="84" y="200" width="92" height="115" rx="8" fill="#c44030"/>
+          <rect x="105" y="255" width="50" height="30" rx="8" fill="rgba(0,0,0,.2)"/>
+          <rect x="116" y="178" width="28" height="26" rx="4" fill="#e09870"/>
+          <ellipse cx="130" cy="148" rx="44" ry="48" fill="#e09870"/>
+          <ellipse cx="86" cy="152" rx="10" ry="13" fill="#e09870"/>
+          <ellipse cx="174" cy="152" rx="10" ry="13" fill="#e09870"/>
+          <circle cx="86" cy="162" r="4" fill="#e8c040"/>
+          <circle cx="174" cy="162" r="4" fill="#e8c040"/>
+          <ellipse cx="130" cy="112" rx="50" ry="44" fill="#3d1a05"/>
+          <circle cx="85" cy="125" r="16" fill="#3d1a05"/>
+          <circle cx="175" cy="125" r="16" fill="#3d1a05"/>
+          <circle cx="100" cy="100" r="8" fill="#4a2208"/>
+          <circle cx="115" cy="92" r="8" fill="#4a2208"/>
+          <circle cx="130" cy="90" r="8" fill="#4a2208"/>
+          <circle cx="145" cy="92" r="8" fill="#4a2208"/>
+          <circle cx="160" cy="100" r="8" fill="#4a2208"/>
+          <ellipse cx="114" cy="148" rx="9" ry="9.5" fill="#fff"/>
+          <ellipse cx="146" cy="148" rx="9" ry="9.5" fill="#fff"/>
+          <ellipse cx="114" cy="149" rx="6" ry="6.5" fill="#3d1a05"/>
+          <ellipse cx="146" cy="149" rx="6" ry="6.5" fill="#3d1a05"/>
+          <circle cx="116" cy="147" r="2" fill="#fff"/>
+          <circle cx="148" cy="147" r="2" fill="#fff"/>
+          <path d="M105 135 Q114 129 123 135" stroke="#3d1a05" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M137 135 Q146 129 155 135" stroke="#3d1a05" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M114 166 Q130 178 146 166" stroke="#c07060" stroke-width="2" fill="rgba(200,100,80,.15)" stroke-linecap="round"/>
+          <rect x="176" y="198" width="36" height="16" rx="7" fill="#e09870" transform="rotate(-35 194 206)"/>
+          <ellipse cx="204" cy="182" rx="10" ry="10" fill="#e09870"/>
+          <rect x="52" y="205" width="32" height="15" rx="7" fill="#e09870"/>
+          <rect x="28" y="208" width="20" height="32" rx="3" fill="#1a1a1a" stroke="#333" stroke-width=".5"/>
+          <rect x="30" y="212" width="16" height="20" rx="1" fill="#2a4080"/>
+          <rect x="94" y="312" width="28" height="58" rx="4" fill="#2a1a1a"/>
+          <rect x="138" y="312" width="28" height="58" rx="4" fill="#2a1a1a"/>
+          <ellipse cx="108" cy="370" rx="18" ry="9" fill="#e8e0d0"/>
+          <ellipse cx="152" cy="370" rx="18" ry="9" fill="#e8e0d0"/>
+          <path d="M125 228 C125 223 130 220 130 220 C130 220 135 223 135 228 C135 233 130 238 130 238 C130 238 125 233 125 228Z" fill="rgba(255,180,160,.5)"/>
+        </svg>
+        <div class="pc-grad" style="background:linear-gradient(0deg,rgba(0,0,0,.92) 0%,rgba(0,0,0,.2) 50%,transparent 100%)"></div>
+        <div class="pc-border"></div>
+        <div class="pc-info"><span class="pc-name">friend</span><span class="pc-tag">chaotic · caring</span></div>
+      </div>
+
+      <div class="pc lover" data-to="s-l">
+        <svg class="pc-art" viewBox="0 0 260 390" xmlns="http://www.w3.org/2000/svg">
+          <rect width="260" height="390" fill="#160610"/>
+          <circle cx="130" cy="195" r="130" fill="rgba(255,60,130,.06)"/>
+          <path d="M45 50 C45 43 53 38 53 38 C53 38 61 43 61 50 C61 57 53 63 53 63 C53 63 45 57 45 50Z" fill="rgba(255,80,140,.25)"><animate attributeName="opacity" values=".2;.7;.2" dur="2s" repeatCount="indefinite"/></path>
+          <path d="M190 80 C190 75 196 71 196 71 C196 71 202 75 202 80 C202 85 196 89 196 89 C196 89 190 85 190 80Z" fill="rgba(255,80,140,.2)"><animate attributeName="opacity" values=".15;.6;.15" dur="2.5s" begin=".5s" repeatCount="indefinite"/></path>
+          <path d="M210 180 C210 176 214 173 214 173 C214 173 218 176 218 180 C218 184 214 187 214 187 C214 187 210 184 210 180Z" fill="rgba(255,80,140,.18)"><animate attributeName="opacity" values=".1;.5;.1" dur="3s" begin="1s" repeatCount="indefinite"/></path>
+          <path d="M88 135 Q90 98 130 93 Q170 98 172 135 Q160 114 130 112 Q100 114 88 135Z" fill="#5a2a10"/>
+          <path d="M88 140 Q76 165 74 210 Q82 175 90 165Z" fill="#5a2a10"/>
+          <path d="M172 140 Q184 165 186 210 Q178 175 170 165Z" fill="#5a2a10"/>
+          <path d="M108 95 Q120 82 130 88 Q140 82 152 95" stroke="#5a2a10" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path d="M100 98 Q105 88 112 90" stroke="#5a2a10" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M160 98 Q155 88 148 90" stroke="#5a2a10" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M96 200 Q78 260 72 320 L188 320 Q182 260 164 200Z" fill="#c44080"/>
+          <path d="M96 200 Q130 220 164 200 Q158 240 130 250 Q102 240 96 200Z" fill="#aa3068"/>
+          <rect x="116" y="178" width="28" height="25" rx="4" fill="#f0c0a0"/>
+          <ellipse cx="130" cy="148" rx="42" ry="46" fill="#f0c0a0"/>
+          <ellipse cx="88" cy="150" rx="9" ry="13" fill="#f0c0a0"/>
+          <ellipse cx="172" cy="150" rx="9" ry="13" fill="#f0c0a0"/>
+          <circle cx="88" cy="158" r="3" fill="rgba(255,150,200,.7)"/>
+          <circle cx="172" cy="158" r="3" fill="rgba(255,150,200,.7)"/>
+          <ellipse cx="114" cy="147" rx="8" ry="8.5" fill="#fff"/>
+          <ellipse cx="146" cy="147" rx="8" ry="8.5" fill="#fff"/>
+          <ellipse cx="114" cy="148" rx="5.5" ry="6" fill="#5a2a18"/>
+          <ellipse cx="146" cy="148" rx="5.5" ry="6" fill="#5a2a18"/>
+          <circle cx="116" cy="146" r="1.8" fill="#fff"/>
+          <circle cx="148" cy="146" r="1.8" fill="#fff"/>
+          <line x1="107" y1="140" x2="105" y2="136" stroke="#2a1008" stroke-width="1.2"/>
+          <line x1="114" y1="139" x2="114" y2="135" stroke="#2a1008" stroke-width="1.2"/>
+          <line x1="121" y1="140" x2="123" y2="136" stroke="#2a1008" stroke-width="1.2"/>
+          <line x1="139" y1="140" x2="137" y2="136" stroke="#2a1008" stroke-width="1.2"/>
+          <line x1="146" y1="139" x2="146" y2="135" stroke="#2a1008" stroke-width="1.2"/>
+          <line x1="153" y1="140" x2="155" y2="136" stroke="#2a1008" stroke-width="1.2"/>
+          <path d="M106 135 Q114 130 122 134" stroke="#5a2a10" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <path d="M138 134 Q146 130 154 135" stroke="#5a2a10" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <path d="M118 167 Q130 175 142 167" stroke="#d47888" stroke-width="1.8" fill="rgba(220,120,140,.15)" stroke-linecap="round"/>
+          <ellipse cx="100" cy="162" rx="12" ry="6" fill="rgba(255,100,130,.18)"/>
+          <ellipse cx="160" cy="162" rx="12" ry="6" fill="rgba(255,100,130,.18)"/>
+          <rect x="58" y="204" width="38" height="15" rx="7" fill="#f0c0a0" transform="rotate(10 77 211)"/>
+          <rect x="164" y="204" width="38" height="15" rx="7" fill="#f0c0a0" transform="rotate(-10 183 211)"/>
+          <path d="M100 316 Q96 360 94 378 L114 378 Q116 360 118 316Z" fill="#f0c0a0"/>
+          <path d="M160 316 Q164 360 166 378 L146 378 Q144 360 142 316Z" fill="#f0c0a0"/>
+          <ellipse cx="104" cy="378" rx="16" ry="6" fill="#e87898"/>
+          <ellipse cx="156" cy="378" rx="16" ry="6" fill="#e87898"/>
+        </svg>
+        <div class="pc-grad"></div><div class="pc-border"></div>
+        <div class="pc-info"><span class="pc-name">lover girl</span><span class="pc-tag">soft · expressive</span></div>
+      </div>
+
+      <div class="pc me" data-to="s-m">
+        <svg class="pc-art" viewBox="0 0 260 390" xmlns="http://www.w3.org/2000/svg">
+          <rect width="260" height="390" fill="#080808"/>
+          <line x1="130" y1="0" x2="130" y2="390" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+          <line x1="0" y1="195" x2="260" y2="195" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+          <line x1="65" y1="0" x2="65" y2="390" stroke="rgba(255,255,255,.03)" stroke-width=".5"/>
+          <line x1="195" y1="0" x2="195" y2="390" stroke="rgba(255,255,255,.03)" stroke-width=".5"/>
+          <line x1="0" y1="98" x2="260" y2="98" stroke="rgba(255,255,255,.03)" stroke-width=".5"/>
+          <line x1="0" y1="292" x2="260" y2="292" stroke="rgba(255,255,255,.03)" stroke-width=".5"/>
+          <path d="M80 200 Q68 240 65 320 L195 320 Q192 240 180 200Z" fill="#1a1a1a"/>
+          <line x1="118" y1="200" x2="115" y2="230" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+          <line x1="142" y1="200" x2="145" y2="230" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+          <rect x="116" y="180" width="28" height="24" rx="4" fill="#c8a070"/>
+          <ellipse cx="130" cy="148" rx="42" ry="46" fill="#c8a070"/>
+          <ellipse cx="88" cy="150" rx="9" ry="13" fill="#c8a070"/>
+          <ellipse cx="172" cy="150" rx="9" ry="13" fill="#c8a070"/>
+          <path d="M88 136 Q90 100 130 96 Q170 100 172 136 Q155 115 130 113 Q105 115 88 136Z" fill="#2a1a08"/>
+          <path d="M88 136 Q82 150 86 174 Q91 150 96 155Z" fill="#2a1a08"/>
+          <path d="M172 136 Q178 150 174 174 Q169 150 164 155Z" fill="#2a1a08"/>
+          <ellipse cx="130" cy="100" rx="42" ry="20" fill="#2a1a08"/>
+          <rect x="162" y="138" width="16" height="12" rx="6" fill="#222" transform="rotate(-18 170 144)"/>
+          <ellipse cx="114" cy="150" rx="8" ry="6" fill="#fff"/>
+          <ellipse cx="146" cy="150" rx="8" ry="6" fill="#fff"/>
+          <ellipse cx="114" cy="152" rx="5" ry="4" fill="#3d2010"/>
+          <ellipse cx="146" cy="152" rx="5" ry="4" fill="#3d2010"/>
+          <path d="M106 147 Q114 144 122 147" stroke="#2a1a08" stroke-width="2" fill="rgba(50,30,10,.5)"/>
+          <path d="M138 147 Q146 144 154 147" stroke="#2a1a08" stroke-width="2" fill="rgba(50,30,10,.5)"/>
+          <line x1="106" y1="140" x2="122" y2="140" stroke="#2a1a08" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="138" y1="140" x2="154" y2="140" stroke="#2a1a08" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="120" y1="170" x2="140" y2="170" stroke="#a07850" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="55" y="210" width="30" height="14" rx="7" fill="#c8a070" transform="rotate(20 70 217)"/>
+          <rect x="175" y="210" width="30" height="14" rx="7" fill="#c8a070" transform="rotate(-20 190 217)"/>
+          <rect x="94" y="316" width="28" height="60" rx="4" fill="#111"/>
+          <rect x="138" y="316" width="28" height="60" rx="4" fill="#111"/>
+          <ellipse cx="108" cy="374" rx="17" ry="8" fill="#1a1a1a"/>
+          <ellipse cx="152" cy="374" rx="17" ry="8" fill="#1a1a1a"/>
+        </svg>
+        <div class="pc-grad" style="background:linear-gradient(0deg,rgba(0,0,0,.95) 0%,rgba(0,0,0,.25) 55%,transparent 100%)"></div>
+        <div class="pc-border"></div>
+        <div class="pc-info"><span class="pc-name" style="color:rgba(255,255,255,.6)">me</span><span class="pc-tag">&nbsp;</span></div>
+      </div>
+
+    </div>
+    <div style="margin-top:20px;font-family:'Space Mono',monospace;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.1);animation:fadeUp .7s .6s both">4 versions · 1 person</div>
+  </div>
+</div>
+
+<div id="s-d" class="scr">
+  <div id="d-certs" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1"></div>
+  <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.04;pointer-events:none" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1200 820"><line x1="0" y1="82" x2="1200" y2="82" stroke="#6496ff" stroke-width=".5"/><line x1="0" y1="246" x2="1200" y2="246" stroke="#6496ff" stroke-width=".5"/><line x1="0" y1="410" x2="1200" y2="410" stroke="#6496ff" stroke-width=".5"/><line x1="0" y1="574" x2="1200" y2="574" stroke="#6496ff" stroke-width=".5"/><line x1="150" y1="0" x2="150" y2="820" stroke="#6496ff" stroke-width=".5"/><line x1="350" y1="0" x2="350" y2="820" stroke="#6496ff" stroke-width=".5"/><line x1="550" y1="0" x2="550" y2="820" stroke="#6496ff" stroke-width=".5"/><line x1="750" y1="0" x2="750" y2="820" stroke="#6496ff" stroke-width=".5"/><line x1="950" y1="0" x2="950" y2="820" stroke="#6496ff" stroke-width=".5"/><line x1="1150" y1="0" x2="1150" y2="820" stroke="#6496ff" stroke-width=".5"/></svg>
+  <div class="char" style="bottom:30px;animation:floatUD 4s ease-in-out infinite">
+    <svg width="120" height="200" viewBox="0 0 120 200">
+      <rect x="30" y="92" width="60" height="84" rx="5" fill="#1e3a7a"/>
+      <rect x="46" y="78" width="28" height="18" rx="3" fill="#d4a882"/>
+      <ellipse cx="60" cy="56" rx="36" ry="40" fill="#d4a882"/>
+      <ellipse cx="24" cy="60" rx="8" ry="12" fill="#d4a882"/>
+      <ellipse cx="96" cy="60" rx="8" ry="12" fill="#d4a882"/>
+      <path d="M24 48 Q26 16 60 12 Q94 16 96 48 Q83 30 60 28 Q37 30 24 48Z" fill="#2a1a08"/>
+      <ellipse cx="60" cy="16" rx="36" ry="14" fill="#2a1a08"/>
+      <rect x="34" y="50" width="18" height="13" rx="4" fill="none" stroke="rgba(150,180,255,.6)" stroke-width="1.5"/>
+      <rect x="58" y="50" width="18" height="13" rx="4" fill="none" stroke="rgba(150,180,255,.6)" stroke-width="1.5"/>
+      <line x1="52" y1="56" x2="58" y2="56" stroke="rgba(150,180,255,.6)" stroke-width="1.5"/>
+      <ellipse cx="43" cy="56" rx="6" ry="5.5" fill="#fff"/>
+      <ellipse cx="67" cy="56" rx="6" ry="5.5" fill="#fff"/>
+      <ellipse cx="43" cy="57" rx="3.5" ry="3.5" fill="#3d2010"/>
+      <ellipse cx="67" cy="57" rx="3.5" ry="3.5" fill="#3d2010"/>
+      <line x1="36" y1="44" x2="50" y2="44" stroke="#2a1a08" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="60" y1="44" x2="74" y2="44" stroke="#2a1a08" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M52 70 Q60 67 68 70" stroke="#b07860" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      <rect x="4" y="96" width="26" height="12" rx="5" fill="#d4a882" transform="rotate(14 17 102)"/>
+      <rect x="90" y="96" width="26" height="12" rx="5" fill="#d4a882" transform="rotate(-14 103 102)"/>
+      <rect x="90" y="104" width="22" height="28" rx="2" fill="#e8d090" stroke="#c0a840" stroke-width="1"/>
+      <line x1="94" y1="110" x2="108" y2="110" stroke="rgba(100,80,20,.3)" stroke-width="1"/>
+      <line x1="94" y1="115" x2="108" y2="115" stroke="rgba(100,80,20,.3)" stroke-width="1"/>
+      <rect x="36" y="174" width="20" height="24" rx="3" fill="#162d5a"/>
+      <rect x="64" y="174" width="20" height="24" rx="3" fill="#162d5a"/>
+      <ellipse cx="46" cy="198" rx="13" ry="6" fill="#222"/>
+      <ellipse cx="74" cy="198" rx="13" ry="6" fill="#222"/>
+    </svg>
+  </div>
+  <nav class="nav">
+    <div class="logo">youflix</div>
+    <div class="nav-links">
+      <span class="nav-link">home</span>
+      <span class="nav-link">watchlist</span>
+      <span class="nav-link">history</span>
+    </div>
+    <div class="nav-right">
+      <div class="nav-tag" style="color:rgba(138,175,255,.35)">daughter</div>
+      <button class="back-btn" onclick="goTo('s-land')">← profiles</button>
+    </div>
+  </nav>
+  <div class="preview-box">
+    <svg viewBox="0 0 1200 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="200" fill="#0a1428"/>
+      <rect x="0" y="0" width="1200" height="200" fill="url(#dgrad)"/>
+      <defs><linearGradient id="dgrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#0a1428"/><stop offset="60%" stop-color="#0d1e3a"/><stop offset="100%" stop-color="#0a1428"/></linearGradient></defs>
+      <g style="animation: previewPan 20s linear infinite alternate">
+        <rect x="20" y="60" width="22" height="140" rx="2" fill="#1a3060"/><rect x="44" y="80" width="18" height="120" rx="2" fill="#162545"/><rect x="64" y="44" width="24" height="156" rx="2" fill="#1e3465"/><rect x="92" y="68" width="20" height="132" rx="2" fill="#14213f"/><rect x="114" y="52" width="26" height="148" rx="2" fill="#182c52"/>
+        <rect x="900" y="55" width="20" height="145" rx="2" fill="#182c52"/><rect x="922" y="70" width="18" height="130" rx="2" fill="#1a3060"/><rect x="942" y="40" width="24" height="160" rx="2" fill="#1e3465"/><rect x="968" y="62" width="22" height="138" rx="2" fill="#162545"/>
+        <circle cx="300" cy="30" r="1.5" fill="rgba(200,220,255,.5)"/><circle cx="450" cy="20" r="1" fill="rgba(200,220,255,.4)"/><circle cx="750" cy="25" r="1.5" fill="rgba(200,220,255,.5)"/><circle cx="850" cy="15" r="1" fill="rgba(200,220,255,.4)"/>
+      </g>
+      <circle cx="600" cy="60" r="40" fill="#1a2d55" stroke="rgba(150,180,255,.2)" stroke-width="1"/>
+      <circle cx="612" cy="52" r="32" fill="#0d1828"/>
+      <ellipse cx="200" cy="130" rx="16" ry="18" fill="#c09070"/>
+      <rect x="184" y="148" width="32" height="40" rx="4" fill="#1a3060"/>
+    </svg>
+    <div class="preview-box-fg"></div>
+    <div class="preview-box-txt">
+      <div style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:3px;color:rgba(138,175,255,.6);margin-bottom:6px">FEATURED · DRAMA</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;font-style:italic;color:#fff">Little Women</div>
+      <div style="font-family:'Inter',sans-serif;font-size:11px;color:rgba(255,255,255,.4);margin-top:4px">four sisters · one role · carry the weight</div>
+    </div>
+  </div>
+  <div class="hero">
+    <div class="eyebrow a1" style="color:rgba(138,175,255,.5)">eldest daughter · overthinks everything</div>
+    <div class="h1 a2" style="color:#8aafff">everything<br><em style="color:rgba(138,175,255,.3);font-size:.62em;display:inline-block;margin-top:12px">in its place.</em></div>
+    <div class="hdesc a3">You adjusted so quietly that nobody noticed you were disappearing into what everyone needed you to be.</div>
+    <div class="hbtns a4"><button class="btn-p" style="background:#3a5fc8">continue watching</button><button class="btn-s">more info</button></div>
+    <div class="hmeta a4">2024 · drama · responsibility · guilt</div>
+  </div>
+  <div class="rows">
+    <div class="rb"><div class="rh"><span class="raccent" style="color:rgba(138,175,255,.6)">safe</span><span class="rlbl">approved content</span><span class="rline"></span></div>
+    <div class="cs">
+      <div class="sc d-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#0d1830"/><path d="M0 66 Q52 42 105 59 Q158 76 210 48 L210 132 L0 132Z" fill="#080f20"/><rect x="20" y="14" width="26" height="70" rx="2" fill="#1a3060"/><rect x="52" y="26" width="22" height="58" rx="2" fill="#162545"/><rect x="80" y="10" width="24" height="74" rx="2" fill="#1e3465"/><rect x="110" y="18" width="26" height="66" rx="2" fill="#14213f"/><rect x="142" y="28" width="22" height="54" rx="2" fill="#182c52"/><ellipse cx="33" cy="12" rx="10" ry="11" fill="#c09070"/><ellipse cx="63" cy="23" rx="8" ry="10" fill="#c8987a"/><ellipse cx="92" cy="8" rx="9" ry="10" fill="#bea070"/><ellipse cx="123" cy="16" rx="9" ry="10" fill="#c49878"/><ellipse cx="153" cy="25" rx="7" ry="9" fill="#c09070"/><text x="105" y="118" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(140,170,220,.3)" font-style="italic">four sisters, one role</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">Little Women</span><span class="sc-m">1994 · CLASSIC</span></div><div class="sc-bar" style="width:62%"></div></div>
+      <div class="sc d-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#0a1428"/><circle cx="66" cy="55" r="26" fill="#0f1f40"/><circle cx="144" cy="55" r="26" fill="#0f1f40"/><ellipse cx="66" cy="46" rx="13" ry="14" fill="#c4956a"/><ellipse cx="144" cy="46" rx="13" ry="14" fill="#b8906a"/><rect x="53" y="63" width="26" height="36" rx="3" fill="#2a4090"/><rect x="131" y="63" width="26" height="36" rx="3" fill="#1a3080"/><text x="105" y="118" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(150,180,255,.3)" font-style="italic">they kept finding each other</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">Normal People</span><span class="sc-m">2020 · HULU</span></div><div class="sc-bar" style="width:38%"></div></div>
+      <div class="sc d-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#0c1520"/><path d="M62 68 L78 36 L105 62 L132 18 L159 62 L175 36 L188 68Z" fill="#2a3f6a" stroke="rgba(180,200,255,.1)" stroke-width=".5"/><rect x="62" y="68" width="126" height="8" rx="1" fill="#1e3260"/><circle cx="105" cy="40" r="5" fill="rgba(255,220,100,.4)"/><circle cx="132" cy="20" r="6" fill="rgba(255,220,100,.5)"/><text x="105" y="112" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(200,210,255,.28)" letter-spacing="2">DUTY ABOVE ALL</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">The Crown</span><span class="sc-m">2016 · NETFLIX</span></div></div>
+      <div class="sc d-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#10141e"/><circle cx="105" cy="52" r="30" fill="#141e35"/><ellipse cx="105" cy="42" rx="17" ry="19" fill="#c8a070"/><rect x="88" y="70" width="34" height="42" rx="3" fill="#1a2a60"/><text x="105" y="122" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(150,170,220,.3)" font-style="italic">"I'm fine."</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">Fleabag</span><span class="sc-m">2016 · BBC</span></div><div class="sc-bar" style="width:85%"></div></div>
+    </div></div>
+    <div class="rb"><div class="rh"><span class="raccent" style="color:rgba(138,175,255,.5)">expected</span><span class="rlbl">what they needed</span><span class="rline"></span></div>
+    <div class="cs">
+      <div class="sc d-sc" style="width:185px;height:116px"><svg viewBox="0 0 185 116"><rect width="185" height="116" fill="#0a1225"/><circle cx="92" cy="44" r="24" fill="#0d1a30"/><ellipse cx="92" cy="36" rx="13" ry="14" fill="#c09070"/><rect x="79" y="56" width="26" height="38" rx="3" fill="#1a2d5a"/><text x="92" y="104" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(140,170,220,.28)" font-style="italic">carry the weight</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t" style="font-size:11px">The Bear</span><span class="sc-m">2022 · HULU</span></div><div class="sc-bar" style="width:44%"></div></div>
+      <div class="sc d-sc" style="width:185px;height:116px"><svg viewBox="0 0 185 116"><rect width="185" height="116" fill="#090e1c"/><circle cx="58" cy="46" r="20" fill="#0f1e38"/><circle cx="127" cy="46" r="20" fill="#0f1e38"/><ellipse cx="58" cy="38" rx="11" ry="12" fill="#c09870"/><ellipse cx="127" cy="38" rx="11" ry="12" fill="#b89060"/><rect x="47" y="56" width="22" height="30" rx="2" fill="#1a2d5a"/><rect x="116" y="56" width="22" height="30" rx="2" fill="#1a2d5a"/><text x="92" y="104" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(140,170,220,.28)" font-style="italic">approval pending</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t" style="font-size:11px">Gilmore Girls</span><span class="sc-m">2000 · WB</span></div><div class="sc-bar" style="width:72%"></div></div>
+      <div class="sc d-sc" style="width:185px;height:116px"><svg viewBox="0 0 185 116"><rect width="185" height="116" fill="#080f20"/><rect x="24" y="14" width="137" height="78" rx="3" fill="#0a1628"/><rect x="34" y="26" width="46" height="5" rx="1" fill="rgba(100,130,200,.1)"/><rect x="34" y="38" width="74" height="5" rx="1" fill="rgba(100,130,200,.07)"/><rect x="34" y="50" width="58" height="5" rx="1" fill="rgba(100,130,200,.09)"/><text x="92" y="104" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(120,160,220,.28)" font-style="italic">all the right answers</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t" style="font-size:11px">Succession</span><span class="sc-m">2018 · HBO</span></div></div>
+      <div class="sc d-sc" style="width:185px;height:116px"><svg viewBox="0 0 185 116"><rect width="185" height="116" fill="#080d1a"/><rect x="16" y="10" width="22" height="54" rx="2" fill="#1a2e5a"/><rect x="44" y="20" width="18" height="44" rx="2" fill="#162545"/><rect x="68" y="8" width="20" height="58" rx="2" fill="#1e3465"/><ellipse cx="27" cy="9" rx="8" ry="9" fill="#c09070"/><ellipse cx="53" cy="17" rx="7" ry="8" fill="#c8987a"/><text x="92" y="104" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(140,170,220,.28)" font-style="italic">they all had roles</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t" style="font-size:11px">Sharp Objects</span><span class="sc-m">2018 · HBO</span></div></div>
+    </div></div>
+    <div class="rb"><div class="rh"><span class="raccent" style="color:rgba(138,175,255,.45)">guilty</span><span class="rlbl">the feeling you carry</span><span class="rline"></span></div>
+    <div class="cs">
+      <div class="sc d-sc" style="width:168px;height:106px"><svg viewBox="0 0 168 106"><rect width="168" height="106" fill="#080d1a"/><circle cx="84" cy="40" r="22" fill="#0d1a30"/><ellipse cx="84" cy="32" rx="12" ry="13" fill="#c09070"/><rect x="72" y="50" width="24" height="34" rx="3" fill="#182d58"/><text x="84" y="96" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(120,160,220,.28)" font-style="italic">paused at midnight</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t" style="font-size:11px">Maid</span><span class="sc-m">2021 · NETFLIX</span></div></div>
+      <div class="sc d-sc" style="width:168px;height:106px"><svg viewBox="0 0 168 106"><rect width="168" height="106" fill="#07101e"/><circle cx="84" cy="40" r="20" fill="#0f1e38"/><ellipse cx="84" cy="33" rx="11" ry="12" fill="#c0987a"/><rect x="73" y="50" width="22" height="30" rx="2" fill="#1a2e58"/><text x="84" y="96" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(120,160,220,.26)" font-style="italic">is this enough?</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t" style="font-size:11px">The Wilds</span><span class="sc-m">2020 · AMAZON</span></div><div class="sc-bar" style="width:27%"></div></div>
+      <div class="sc d-sc" style="width:168px;height:106px"><svg viewBox="0 0 168 106"><rect width="168" height="106" fill="#060c18"/><rect x="22" y="10" width="124" height="72" rx="2" fill="#0a1628"/><rect x="32" y="20" width="42" height="5" rx="1" fill="rgba(100,140,255,.1)"/><rect x="32" y="32" width="65" height="5" rx="1" fill="rgba(100,140,255,.07)"/><rect x="32" y="44" width="52" height="5" rx="1" fill="rgba(100,140,255,.08)"/><text x="84" y="96" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(120,160,220,.26)" font-style="italic">right on paper</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t" style="font-size:11px">Rectify</span><span class="sc-m">2013 · SUNDANCE</span></div></div>
+      <div class="sc d-sc" style="width:168px;height:106px"><svg viewBox="0 0 168 106"><rect width="168" height="106" fill="#07101f"/><circle cx="84" cy="40" r="16" fill="#0d1b35"/><ellipse cx="84" cy="33" rx="9" ry="10" fill="#bca070"/><rect x="75" y="46" width="18" height="26" rx="2" fill="#182d55"/><text x="84" y="96" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(120,160,220,.26)" font-style="italic">still adjusting</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t" style="font-size:11px">Atypical</span><span class="sc-m">2017 · NETFLIX</span></div></div>
+    </div></div>
+  </div>
+</div>
+
+<div id="s-f" class="scr">
+  <div class="char" style="top:70px;animation:bounce 1.3s cubic-bezier(.4,0,.6,1) infinite">
+    <svg width="100" height="168" viewBox="0 0 100 168"><rect x="20" y="86" width="60" height="72" rx="7" fill="#c44030"/><rect x="30" y="140" width="20" height="26" rx="3" fill="#2a1a1a"/><rect x="54" y="140" width="20" height="26" rx="3" fill="#2a1a1a"/><ellipse cx="40" cy="166" rx="13" ry="6" fill="#e8e0d0"/><ellipse cx="64" cy="166" rx="13" ry="6" fill="#e8e0d0"/><rect x="43" y="68" width="14" height="20" rx="4" fill="#e09870"/><ellipse cx="50" cy="50" rx="30" ry="34" fill="#e09870"/><ellipse cx="20" cy="53" rx="7" ry="10" fill="#e09870"/><ellipse cx="80" cy="53" rx="7" ry="10" fill="#e09870"/><circle cx="19" cy="59" r="3.5" fill="#e8c040"/><circle cx="81" cy="59" r="3.5" fill="#e8c040"/><ellipse cx="50" cy="26" rx="34" ry="28" fill="#3d1a05"/><circle cx="20" cy="40" r="11" fill="#3d1a05"/><circle cx="80" cy="40" r="11" fill="#3d1a05"/><circle cx="36" cy="20" r="7" fill="#4a2208"/><circle cx="50" cy="17" r="7" fill="#4a2208"/><circle cx="64" cy="20" r="7" fill="#4a2208"/><ellipse cx="44" cy="50" rx="6" ry="6.5" fill="#fff"/><ellipse cx="56" cy="50" rx="6" ry="6.5" fill="#fff"/><ellipse cx="44" cy="51" rx="4" ry="4.5" fill="#3d1a05"/><ellipse cx="56" cy="51" rx="4" ry="4.5" fill="#3d1a05"/><circle cx="45.5" cy="49" r="1.5" fill="#fff"/><circle cx="57.5" cy="49" r="1.5" fill="#fff"/><path d="M38 33 Q44 29 50 31 Q56 29 62 33" stroke="#3d1a05" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M41 62 Q50 70 59 62" stroke="#c07060" stroke-width="1.8" fill="rgba(200,100,80,.12)" stroke-linecap="round"/><rect x="2" y="90" width="22" height="10" rx="5" fill="#e09870" transform="rotate(-36 13 95)"/><rect x="78" y="88" width="22" height="10" rx="5" fill="#e09870" transform="rotate(14 89 93)"/><path d="M46 102 C46 97 50 95 50 95 C50 95 54 97 54 102 C54 107 50 111 50 111 C50 111 46 107 46 102Z" fill="rgba(255,180,160,.45)"/></svg>
+  </div>
+  <nav class="nav">
+    <div class="logo">youflix</div>
+    <div class="nav-links">
+      <span class="nav-link">home</span>
+      <span class="nav-link">watchlist</span>
+      <span class="nav-link">history</span>
+    </div>
+    <div class="nav-right">
+      <div class="nav-tag" style="color:rgba(255,100,80,.35)">friend</div>
+      <button class="back-btn" onclick="goTo('s-land')">← profiles</button>
+    </div>
+  </nav>
+  <div class="preview-box">
+    <svg viewBox="0 0 1200 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="200" fill="#1a0808"/>
+      <circle cx="200" cy="100" r="180" fill="rgba(200,60,40,.06)"/>
+      <circle cx="1000" cy="100" r="180" fill="rgba(200,60,40,.06)"/>
+      <circle cx="140" cy="80" r="50" fill="#2d1010"/><circle cx="320" cy="90" r="46" fill="#2a0f0f"/><circle cx="500" cy="75" r="52" fill="#2d1010"/>
+      <ellipse cx="140" cy="64" rx="28" ry="30" fill="#d49060"/><ellipse cx="320" cy="74" rx="26" ry="28" fill="#c88060"/><ellipse cx="500" cy="59" rx="30" ry="32" fill="#d49070"/>
+      <rect x="112" y="96" width="56" height="80" rx="6" fill="#c44030"/><rect x="294" y="104" width="52" height="72" rx="6" fill="#aa3020"/><rect x="470" y="90" width="60" height="86" rx="6" fill="#c44030"/>
+      
+      <g style="animation: typeDot 1.5s infinite">
+          <circle cx="485" cy="110" r="4" fill="rgba(255,255,255,.5)" style="animation-delay: 0s" />
+          <circle cx="500" cy="110" r="4" fill="rgba(255,255,255,.5)" style="animation-delay: 0.2s" />
+          <circle cx="515" cy="110" r="4" fill="rgba(255,255,255,.5)" style="animation-delay: 0.4s" />
+      </g>
+      
+      <text x="700" y="100" font-family="Georgia,serif" font-size="13" fill="rgba(255,120,100,.3)" font-style="italic">always in the group chat</text>
+    </svg>
+    <div class="preview-box-fg" style="background:linear-gradient(90deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.15) 60%,transparent 100%)"></div>
+    <div class="preview-box-txt">
+      <div style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:3px;color:rgba(255,120,100,.6);margin-bottom:6px">FEATURED · COMEDY</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;font-style:italic;color:#fff">The Bold Type</div>
+      <div style="font-family:'Inter',sans-serif;font-size:11px;color:rgba(255,255,255,.4);margin-top:4px">group energy · always showing up · chaos</div>
+    </div>
+  </div>
+  <div class="hero">
+    <div class="eyebrow a1" style="color:rgba(255,120,100,.5)">the mom friend · always online · remembers everything</div>
+    <div class="h1 a2" style="color:#ff7070">i remember<br><em style="color:rgba(255,112,112,.3);font-size:.65em;display:inline-block;margin-top:12px">everything.</em></div>
+    <div class="hdesc a3">You give so much that sometimes you forget to check if there's anything left for you. But you still show up. Every. Single. Time.</div>
+    <div class="hbtns a4"><button class="btn-p" style="background:#c44030">play now</button><button class="btn-s">watch together</button></div>
+    <div class="hmeta a4">2024 · friendship · emotional availability · drain</div>
+  </div>
+  <div class="rows">
+    <div class="rb"><div class="rh"><span class="raccent" style="color:rgba(255,120,100,.6)">watch with friends</span><span class="rlbl">group energy only</span><span class="rline"></span></div>
+    <div class="cs">
+      <div class="sc f-sc" style="width:240px"><svg viewBox="0 0 240 132"><rect width="240" height="132" fill="#1a0808"/><circle cx="46" cy="52" r="20" fill="#2d1010"/><circle cx="120" cy="46" r="24" fill="#2a0f0f"/><circle cx="194" cy="52" r="20" fill="#2d1010"/><ellipse cx="46" cy="43" rx="12" ry="13" fill="#d49060"/><ellipse cx="120" cy="37" rx="14" ry="15" fill="#c88060"/><ellipse cx="194" cy="43" rx="12" ry="13" fill="#d49070"/><rect x="34" y="68" width="24" height="34" rx="4" fill="#c44030"/><rect x="106" y="62" width="28" height="38" rx="4" fill="#aa3020"/><rect x="182" y="68" width="24" height="34" rx="4" fill="#c44030"/><text x="120" y="118" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,130,100,.35)" font-style="italic">always in the group chat</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">The Bold Type</span><span class="sc-m">2017 · FREEFORM</span></div><div class="sc-bar" style="width:91%"></div></div>
+      <div class="sc f-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#180a0a"/><circle cx="62" cy="52" r="20" fill="#281010"/><circle cx="148" cy="52" r="20" fill="#281010"/><ellipse cx="62" cy="43" rx="12" ry="13" fill="#c89060"/><ellipse cx="148" cy="43" rx="12" ry="13" fill="#d09060"/><rect x="50" y="68" width="24" height="36" rx="3" fill="#b83a28"/><rect x="136" y="68" width="24" height="36" rx="3" fill="#c04030"/><text x="105" y="118" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,120,100,.3)" font-style="italic">showed up every time</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">Broad City</span><span class="sc-m">2014 · COMEDY CC</span></div></div>
+      <div class="sc f-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#160808"/><rect x="16" y="16" width="178" height="96" rx="5" fill="#1e0c0c"/><rect x="24" y="24" width="80" height="50" rx="2" fill="#240f0f"/><rect x="110" y="24" width="78" height="50" rx="2" fill="#240f0f"/><ellipse cx="64" cy="48" rx="16" ry="18" fill="#c88060"/><ellipse cx="149" cy="48" rx="16" ry="18" fill="#d09070"/><text x="105" y="120" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,110,90,.3)" font-style="italic">remembered your order</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">New Girl</span><span class="sc-m">2011 · FOX</span></div><div class="sc-bar" style="width:56%"></div></div>
+      <div class="sc f-sc" style="width:240px"><svg viewBox="0 0 240 132"><rect width="240" height="132" fill="#1a0909"/><circle cx="48" cy="58" r="17" fill="#2a1010"/><circle cx="120" cy="66" r="21" fill="#2a1010"/><circle cx="192" cy="58" r="17" fill="#2a1010"/><ellipse cx="48" cy="51" rx="10" ry="11" fill="#c88a60"/><ellipse cx="120" cy="58" rx="13" ry="14" fill="#d49070"/><ellipse cx="192" cy="51" rx="10" ry="11" fill="#c89060"/><text x="120" y="118" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,110,90,.3)" font-style="italic">i've got you, always</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">Dead to Me</span><span class="sc-m">2019 · NETFLIX</span></div></div>
+    </div></div>
+    <div class="rb"><div class="rh"><span class="raccent" style="color:rgba(255,120,100,.55)">drained</span><span class="rlbl">(but still here)</span><span class="rline"></span></div>
+    <div class="cs">
+      <div class="sc f-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#140808"/><circle cx="105" cy="52" r="30" fill="#200d0d"/><ellipse cx="105" cy="42" rx="17" ry="18" fill="#c8906a"/><rect x="88" y="66" width="34" height="44" rx="4" fill="#aa3020"/><text x="105" y="120" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,100,80,.3)" font-style="italic">one more thing</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">Shrinking</span><span class="sc-m">2023 · APPLE TV+</span></div><div class="sc-bar" style="width:33%"></div></div>
+      <div class="sc f-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#130707"/><circle cx="105" cy="52" r="22" fill="#240f0f"/><ellipse cx="105" cy="43" rx="13" ry="14" fill="#c89070"/><rect x="92" y="62" width="26" height="30" rx="2" fill="#a83020"/><text x="105" y="112" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,100,80,.3)" font-style="italic">didn't say I was tired</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">After Life</span><span class="sc-m">2019 · NETFLIX</span></div></div>
+      <div class="sc f-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#150909"/><circle cx="65" cy="50" r="22" fill="#220e0e"/><circle cx="145" cy="50" r="22" fill="#220e0e"/><ellipse cx="65" cy="41" rx="13" ry="14" fill="#c89068"/><ellipse cx="145" cy="41" rx="13" ry="14" fill="#d09070"/><rect x="52" y="62" width="26" height="38" rx="2" fill="#b03020"/><rect x="132" y="62" width="26" height="38" rx="2" fill="#c03828"/><text x="105" y="118" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,100,80,.28)" font-style="italic">need space, won't say it</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">I May Destroy You</span><span class="sc-m">2020 · BBC</span></div><div class="sc-bar" style="width:67%"></div></div>
+      <div class="sc f-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#140808"/><circle cx="65" cy="48" r="18" fill="#1e0c0c"/><circle cx="105" cy="52" r="24" fill="#220f0f"/><circle cx="145" cy="48" r="18" fill="#1e0c0c"/><ellipse cx="65" cy="41" rx="11" ry="12" fill="#c89070"/><ellipse cx="105" cy="44" rx="14" ry="15" fill="#d49080"/><ellipse cx="145" cy="41" rx="11" ry="12" fill="#c08060"/><text x="105" y="118" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,100,80,.28)" font-style="italic">did I say too much</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">Grey's Anatomy</span><span class="sc-m">2005 · ABC</span></div><div class="sc-bar" style="width:78%"></div></div>
+    </div></div>
+    <div class="rb"><div class="rh"><span class="raccent" style="color:rgba(255,120,100,.5)">scared of losing</span><span class="rlbl">the ones you hold</span><span class="rline"></span></div>
+    <div class="cs">
+      <div class="sc f-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#150909"/><ellipse cx="60" cy="56" rx="18" ry="20" fill="#c89070"/><ellipse cx="150" cy="56" rx="18" ry="20" fill="#c89060"/><rect x="51" y="78" width="26" height="36" rx="3" fill="#c03828"/><rect x="133" y="78" width="26" height="36" rx="3" fill="#b83020"/><text x="105" y="124" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(255,100,80,.28)" font-style="italic">read at 11:47pm</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">Insecure</span><span class="sc-m">2016 · HBO</span></div><div class="sc-bar" style="width:49%"></div></div>
+      <div class="sc f-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#130808"/><circle cx="68" cy="60" r="22" fill="#200c0c"/><circle cx="142" cy="60" r="22" fill="#200c0c"/><ellipse cx="68" cy="51" rx="13" ry="14" fill="#c89068"/><ellipse cx="142" cy="51" rx="13" ry="14" fill="#c08860"/><text x="105" y="120" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,100,80,.28)" font-style="italic">still checking on you</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">Workin' Moms</span><span class="sc-m">2017 · NETFLIX</span></div></div>
+      <div class="sc f-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#140909"/><circle cx="42" cy="52" r="18" fill="#1e0d0d"/><circle cx="105" cy="48" r="24" fill="#220f0f"/><circle cx="168" cy="52" r="18" fill="#1e0d0d"/><ellipse cx="42" cy="44" rx="11" ry="12" fill="#c89070"/><ellipse cx="105" cy="39" rx="15" ry="16" fill="#d49080"/><ellipse cx="168" cy="44" rx="11" ry="12" fill="#c08060"/><text x="105" y="120" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,100,80,.28)" font-style="italic">you're my person</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">Grey's Anatomy</span><span class="sc-m">2005 · ABC</span></div></div>
+    </div></div>
+  </div>
+</div>
+
+<div id="s-l" class="scr">
+  <div id="l-hearts" style="position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:3"></div>
+  <div class="char" style="bottom:10px;animation:pulse 3s ease-in-out infinite">
+    <svg width="120" height="210" viewBox="0 0 120 210">
+      <path d="M17 46 Q18 8 60 4 Q102 8 103 46 Q90 26 60 22 Q30 26 17 46Z" fill="#5a2a10"/>
+      <path d="M17 50 Q4 80 6 118 Q14 84 22 80Z" fill="#5a2a10"/>
+      <path d="M103 50 Q116 80 114 118 Q106 84 98 80Z" fill="#5a2a10"/>
+      <ellipse cx="12" cy="70" rx="12" ry="28" fill="#5a2a10"/>
+      <ellipse cx="108" cy="70" rx="12" ry="28" fill="#5a2a10"/>
+      <path d="M22 88 Q10 126 8 182 L112 182 Q110 126 98 88Z" fill="#c44080"/>
+      <path d="M22 88 Q60 108 98 88 Q88 124 60 130 Q32 124 22 88Z" fill="#aa3068"/>
+      <rect x="46" y="72" width="28" height="22" rx="4" fill="#f0c0a0"/>
+      <ellipse cx="60" cy="52" rx="38" ry="42" fill="#f0c0a0"/>
+      <ellipse cx="22" cy="55" rx="8" ry="12" fill="#f0c0a0"/>
+      <ellipse cx="98" cy="55" rx="8" ry="12" fill="#f0c0a0"/>
+      <circle cx="22" cy="62" r="3" fill="rgba(255,150,200,.7)"/>
+      <circle cx="98" cy="62" r="3" fill="rgba(255,150,200,.7)"/>
+      <ellipse cx="46" cy="51" rx="7" ry="7.5" fill="#fff"/>
+      <ellipse cx="74" cy="51" rx="7" ry="7.5" fill="#fff"/>
+      <ellipse cx="46" cy="52" rx="4.5" ry="5" fill="#5a2a18"/>
+      <ellipse cx="74" cy="52" rx="4.5" ry="5" fill="#5a2a18"/>
+      <circle cx="48" cy="50" r="1.5" fill="#fff"/>
+      <circle cx="76" cy="50" r="1.5" fill="#fff"/>
+      <line x1="39" y1="44" x2="37" y2="40" stroke="#2a1008" stroke-width="1.2"/>
+      <line x1="46" y1="43" x2="46" y2="39" stroke="#2a1008" stroke-width="1.2"/>
+      <line x1="53" y1="44" x2="55" y2="40" stroke="#2a1008" stroke-width="1.2"/>
+      <line x1="67" y1="44" x2="65" y2="40" stroke="#2a1008" stroke-width="1.2"/>
+      <line x1="74" y1="43" x2="74" y2="39" stroke="#2a1008" stroke-width="1.2"/>
+      <line x1="81" y1="44" x2="83" y2="40" stroke="#2a1008" stroke-width="1.2"/>
+      <path d="M38 43 Q46 38 54 42" stroke="#5a2a10" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <path d="M66 42 Q74 38 82 43" stroke="#5a2a10" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <path d="M50 67 Q60 75 70 67" stroke="#d47888" stroke-width="1.8" fill="rgba(220,120,140,.2)" stroke-linecap="round"/>
+      <ellipse cx="36" cy="60" rx="10" ry="5" fill="rgba(255,100,130,.2)"/>
+      <ellipse cx="84" cy="60" rx="10" ry="5" fill="rgba(255,100,130,.2)"/>
+      
+      <g style="animation: floatUpHearts 2.5s infinite linear; transform-origin: 60px 20px;">
+          <path d="M60 10 C60 7 62.5 5 62.5 5 C62.5 5 65 7 65 10 C65 13 62.5 15 62.5 15 C62.5 15 60 13 60 10Z" fill="rgba(255,80,140,.8)" />
+          <path d="M45 0 C45 -3 47.5 -5 47.5 -5 C47.5 -5 50 -3 50 0 C50 3 47.5 5 47.5 5 C47.5 5 45 3 45 0Z" fill="rgba(255,80,140,.6)" style="animation-delay: 0.5s" />
+          <path d="M72 0 C72 -3 74.5 -5 74.5 -5 C74.5 -5 77 -3 77 0 C77 3 74.5 5 74.5 5 C74.5 5 72 3 72 0Z" fill="rgba(255,80,140,.7)" style="animation-delay: 1.2s" />
+      </g>
+
+      <path d="M98 90 Q112 112 114 142 Q106 118 100 116Z" fill="#f0c0a0"/>
+      <line x1="112" y1="138" x2="118" y2="162" stroke="#4a8030" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M113 148 Q108 144 110 138 Q116 142 113 148Z" fill="#5a9040"/>
+      <circle cx="118" cy="162" r="7" fill="#ff4080"/>
+      <circle cx="115" cy="159" r="5" fill="#e83870"/>
+      <circle cx="121" cy="159" r="5" fill="#ff5090"/>
+      <circle cx="118" cy="156" r="4" fill="#ff3060"/>
+      <path d="M22 90 Q8 112 6 140 Q14 118 20 116Z" fill="#f0c0a0"/>
+      <path d="M28 180 Q24 196 26 204 L42 204 Q44 196 42 180Z" fill="#f0c0a0"/>
+      <path d="M92 180 Q96 196 94 204 L78 204 Q76 196 78 180Z" fill="#f0c0a0"/>
+      <ellipse cx="34" cy="204" rx="13" ry="5" fill="#e87898"/>
+      <ellipse cx="86" cy="204" rx="13" ry="5" fill="#e87898"/>
+    </svg>
+  </div>
+  <nav class="nav">
+    <div class="logo">youflix</div>
+    <div class="nav-links">
+      <span class="nav-link">home</span>
+      <span class="nav-link">saved</span>
+      <span class="nav-link">moments</span>
+    </div>
+    <div class="nav-right">
+      <div class="nav-tag" style="color:rgba(255,120,180,.4)">lover girl</div>
+      <button class="back-btn" onclick="goTo('s-land')">← profiles</button>
+    </div>
+  </nav>
+  <div class="feat" style="height:220px">
+    <svg viewBox="0 0 1200 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="220" fill="#1e0616"/>
+      <g style="animation: pulseGlow 4s infinite">
+        <circle cx="600" cy="110" r="200" fill="rgba(255,60,130,.05)"/>
+        <circle cx="600" cy="110" r="150" fill="rgba(255,60,130,.08)"/>
+      </g>
+      <circle cx="240" cy="96" r="72" fill="#2e0d22"/>
+      <circle cx="960" cy="96" r="72" fill="#2e0d22"/>
+      <ellipse cx="240" cy="73" rx="34" ry="38" fill="#f0c0a0"/>
+      <rect x="206" y="111" width="68" height="88" rx="9" fill="#c44080"/>
+      <ellipse cx="960" cy="73" rx="34" ry="38" fill="#d4a07a"/>
+      <rect x="926" y="111" width="68" height="88" rx="9" fill="#8a4060"/>
+      <path d="M308 96 Q600 58 892 96" stroke="rgba(255,100,160,.18)" stroke-width="1.5" fill="none" stroke-dasharray="4,5"/>
+      <path d="M580 106 Q600 96 620 106 Q614 120 600 128 Q586 120 580 106Z" fill="rgba(255,80,140,.7)"/>
+      <circle cx="160" cy="38" r="5" fill="rgba(255,100,160,.4)"><animate attributeName="opacity" values=".4;1;.4" dur="1.8s" repeatCount="indefinite"/></circle>
+      <circle cx="1040" cy="48" r="4" fill="rgba(255,100,160,.35)"><animate attributeName="opacity" values=".35;.9;.35" dur="2.2s" begin=".4s" repeatCount="indefinite"/></circle>
+    </svg>
+    <div class="feat-fg"></div>
+    <div class="feat-txt">
+      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:4px;color:rgba(255,130,180,.6);margin-bottom:10px;text-transform:uppercase">soft · expressive · three texts deep</div>
+      <div style="font-family:'Playfair Display',serif;font-size:clamp(24px,3vw,44px);font-weight:900;font-style:italic;line-height:.95;color:#fff">you romanticise<br><span style="color:rgba(255,150,190,.38);font-size:.7em">everything.</span></div>
+    </div>
+  </div>
+  <div style="padding:0 48px 14px">
+    <div class="hdesc a2" style="margin-bottom:12px">You notice the small things. You feel things before they happen. It's a gift and it's also the problem.</div>
+    <div class="hbtns a3"><button class="btn-p" style="background:#a0245a">slow play</button><button class="btn-s">saved moments</button></div>
+  </div>
+  <div class="rows">
+    <div class="rb"><div class="rh"><span class="raccent" style="color:rgba(255,130,180,.6)">romantic</span><span class="rlbl">heart cards · slow burn</span><span class="rline"></span></div>
+    <div class="hc-wrap">
+      <div class="hc">
+        <svg viewBox="0 0 180 180"><rect width="180" height="180" fill="#200818"/><circle cx="90" cy="75" r="50" fill="#2e0d20"/><ellipse cx="90" cy="62" rx="24" ry="26" fill="#f0c0a0"/><rect x="66" y="90" width="48" height="60" rx="8" fill="#c44080"/></svg>
+        <div class="hc-g"></div>
+        <div class="hc-i"><span class="hc-t">Normal People</span><span class="hc-m">2020</span></div>
+      </div>
+      <div class="hc">
+        <svg viewBox="0 0 180 180"><rect width="180" height="180" fill="#1c0614"/><circle cx="90" cy="72" r="48" fill="#2a0d1e"/><ellipse cx="90" cy="60" rx="22" ry="24" fill="#f0c0a0"/><rect x="68" y="86" width="44" height="60" rx="9" fill="#c44080"/></svg>
+        <div class="hc-g"></div>
+        <div class="hc-i"><span class="hc-t">Call Me By Your Name</span><span class="hc-m">2017</span></div>
+      </div>
+      <div class="hc">
+        <svg viewBox="0 0 180 180"><rect width="180" height="180" fill="#1e0716"/><circle cx="90" cy="74" r="46" fill="#280b1a"/><ellipse cx="90" cy="63" rx="20" ry="22" fill="#e0b09a"/><rect x="70" y="88" width="40" height="56" rx="7" fill="#c04080"/></svg>
+        <div class="hc-g"></div>
+        <div class="hc-i"><span class="hc-t">Outlander</span><span class="hc-m">2014</span></div>
+      </div>
+      <div class="hc">
+        <svg viewBox="0 0 180 180"><rect width="180" height="180" fill="#1e0818"/><circle cx="90" cy="72" r="45" fill="#2a0d1e"/><ellipse cx="90" cy="61" rx="21" ry="23" fill="#f0c0a0"/><rect x="69" y="87" width="42" height="58" rx="8" fill="#b83870"/></svg>
+        <div class="hc-g"></div>
+        <div class="hc-i"><span class="hc-t">Fleabag</span><span class="hc-m">2016</span></div>
+      </div>
+      <div class="hc">
+        <svg viewBox="0 0 180 180"><rect width="180" height="180" fill="#1c0714"/><circle cx="90" cy="72" r="44" fill="#250b1a"/><ellipse cx="90" cy="61" rx="20" ry="22" fill="#e8b8a0"/><rect x="70" y="87" width="40" height="58" rx="8" fill="#c04080"/></svg>
+        <div class="hc-g"></div>
+        <div class="hc-i"><span class="hc-t">Conversations w/ Friends</span><span class="hc-m">2022</span></div>
+      </div>
+    </div></div>
+    <div class="rb"><div class="rh"><span class="raccent" style="color:rgba(255,130,180,.5)">suggested for you</span><span class="rlbl">romance · slow burn</span><span class="rline"></span></div>
+    <div class="cs">
+      <div class="sc l-sc" style="width:220px"><svg viewBox="0 0 220 132"><rect width="220" height="132" fill="#1c0714"/><circle cx="72" cy="56" r="28" fill="#2a0d1e"/><circle cx="148" cy="56" r="28" fill="#2a0d1e"/><ellipse cx="72" cy="46" rx="17" ry="18" fill="#f0c0a0"/><ellipse cx="148" cy="46" rx="17" ry="18" fill="#e4b49a"/><rect x="55" y="70" width="34" height="46" rx="6" fill="#c04080"/><rect x="131" y="70" width="34" height="46" rx="6" fill="#b03870"/><text x="110" y="124" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,130,180,.35)" font-style="italic">in another life, maybe</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">Bridgerton</span><span class="sc-m">2020 · NETFLIX</span></div></div>
+      <div class="sc l-sc" style="width:220px"><svg viewBox="0 0 220 132"><rect width="220" height="132" fill="#1a0610"/><rect x="22" y="16" width="176" height="90" rx="9" fill="#250b1a"/><rect x="34" y="28" width="96" height="10" rx="5" fill="rgba(200,60,120,.14)"/><rect x="34" y="46" width="74" height="8" rx="4" fill="rgba(200,60,120,.09)"/><rect x="34" y="60" width="108" height="8" rx="4" fill="rgba(200,60,120,.11)"/><text x="110" y="120" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,130,180,.3)" font-style="italic">what did that mean</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">The Idea of You</span><span class="sc-m">2024 · AMAZON</span></div><div class="sc-bar" style="width:77%"></div></div>
+      <div class="sc l-sc" style="width:220px"><svg viewBox="0 0 220 132"><rect width="220" height="132" fill="#1e0816"/><circle cx="72" cy="54" r="24" fill="#260c1c"/><circle cx="148" cy="54" r="24" fill="#260c1c"/><ellipse cx="72" cy="44" rx="14" ry="15" fill="#f0c0a0"/><ellipse cx="148" cy="44" rx="14" ry="15" fill="#e8b8a0"/><text x="110" y="120" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,130,180,.3)" font-style="italic">she reads into everything</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">One Day</span><span class="sc-m">2024 · NETFLIX</span></div></div>
+      <div class="sc l-sc" style="width:220px"><svg viewBox="0 0 220 132"><rect width="220" height="132" fill="#1c0614"/><circle cx="56" cy="52" r="24" fill="#280b1a"/><circle cx="164" cy="52" r="24" fill="#280b1a"/><ellipse cx="56" cy="42" rx="14" ry="15" fill="#e0b09a"/><ellipse cx="164" cy="42" rx="14" ry="15" fill="#f0c0a8"/><path d="M80 52 Q110 38 134 52" stroke="rgba(255,100,160,.2)" fill="none" stroke-dasharray="3,4"/><text x="110" y="120" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,130,180,.3)" font-style="italic">every song was about you</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">About Time</span><span class="sc-m">2013 · FILM</span></div></div>
+    </div></div>
+    <div class="rb"><div class="rh"><span class="raccent" style="color:rgba(255,130,180,.45)">overthinking</span><span class="rlbl">2am · unread drafts</span><span class="rline"></span></div>
+    <div class="cs">
+      <div class="sc l-sc" style="width:220px"><svg viewBox="0 0 220 132"><rect width="220" height="132" fill="#1c0714"/><circle cx="76" cy="56" r="28" fill="#2a0d1e"/><circle cx="148" cy="56" r="28" fill="#2a0d1e"/><ellipse cx="76" cy="47" rx="17" ry="18" fill="#f0c0a0"/><ellipse cx="148" cy="47" rx="17" ry="18" fill="#e4b49a"/><text x="110" y="124" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,130,180,.3)" font-style="italic">every small thing matters</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">Sense and Sensibility</span><span class="sc-m">1995 · FILM</span></div></div>
+      <div class="sc l-sc" style="width:220px"><svg viewBox="0 0 220 132"><rect width="220" height="132" fill="#1a0710"/><rect x="24" y="18" width="172" height="86" rx="9" fill="#250b1a"/><rect x="38" y="32" width="70" height="9" rx="4" fill="rgba(200,60,120,.14)"/><rect x="38" y="48" width="110" height="7" rx="3" fill="rgba(200,60,120,.09)"/><text x="110" y="120" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,130,180,.28)" font-style="italic">waiting to be chosen</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">Pride & Prejudice</span><span class="sc-m">2005 · FILM</span></div></div>
+    </div></div>
+  </div>
+</div>
+
+<div id="s-m" class="scr">
+  <div class="puzzle-bg"></div>
+  <div class="char" style="top:50%;margin-top:-100px;animation:breathe 6s ease-in-out infinite;opacity:.4">
+    <svg width="100" height="180" viewBox="0 0 100 180">
+      <path d="M18 86 Q8 120 6 172 L94 172 Q92 120 82 86Z" fill="#1a1a1a"/>
+      <line x1="42" y1="86" x2="40" y2="108" stroke="rgba(255,255,255,.14)" stroke-width="1.5"/>
+      <line x1="58" y1="86" x2="60" y2="108" stroke="rgba(255,255,255,.14)" stroke-width="1.5"/>
+      <rect x="36" y="70" width="28" height="20" rx="4" fill="#c8a070"/>
+      <ellipse cx="50" cy="50" rx="36" ry="40" fill="#c8a070"/>
+      <ellipse cx="14" cy="53" rx="7" ry="11" fill="#c8a070"/>
+      <ellipse cx="86" cy="53" rx="7" ry="11" fill="#c8a070"/>
+      <path d="M14 40 Q16 8 50 5 Q84 8 86 40 Q72 22 50 20 Q28 22 14 40Z" fill="#2a1a08"/>
+      <ellipse cx="50" cy="10" rx="36" ry="16" fill="#2a1a08"/>
+      <path d="M14 40 Q6 56 8 80 Q16 60 20 64Z" fill="#2a1a08"/>
+      <path d="M86 40 Q94 56 92 80 Q84 60 80 64Z" fill="#2a1a08"/>
+      <rect x="66" y="36" width="14" height="10" rx="5" fill="#333" stroke="#444" stroke-width=".5" transform="rotate(-17 73 41)"/>
+      <ellipse cx="38" cy="50" rx="7" ry="5.5" fill="#fff"/>
+      <ellipse cx="62" cy="50" rx="7" ry="5.5" fill="#fff"/>
+      <ellipse cx="38" cy="51" rx="4" ry="3.5" fill="#3d2010"/>
+      <ellipse cx="62" cy="51" rx="4" ry="3.5" fill="#3d2010"/>
+      <path d="M30 44 Q38 42 46 44" stroke="#2a1a08" stroke-width="2" fill="rgba(50,30,10,.5)"/>
+      <path d="M54 44 Q62 42 70 44" stroke="#2a1a08" stroke-width="2" fill="rgba(50,30,10,.5)"/>
+      <line x1="32" y1="38" x2="46" y2="38" stroke="#2a1a08" stroke-width="1.8"/>
+      <line x1="54" y1="38" x2="68" y2="38" stroke="#2a1a08" stroke-width="1.8"/>
+      <line x1="40" y1="64" x2="60" y2="64" stroke="#a07850" stroke-width="1.3"/>
+      <rect x="6" y="90" width="18" height="10" rx="5" fill="#c8a070" transform="rotate(19 15 95)"/>
+      <rect x="76" y="90" width="18" height="10" rx="5" fill="#c8a070" transform="rotate(-19 85 95)"/>
+      <rect x="20" y="154" width="20" height="16" rx="3" fill="#111"/>
+      <rect x="60" y="154" width="20" height="16" rx="3" fill="#111"/>
+      <ellipse cx="30" cy="170" rx="13" ry="6" fill="#1a1a1a"/>
+      <ellipse cx="70" cy="170" rx="13" ry="6" fill="#1a1a1a"/>
+    </svg>
+  </div>
+  <nav class="nav" style="position:relative;z-index:40">
+    <div class="logo">youflix</div>
+    <div class="nav-links">
+      <span class="nav-link">home</span>
+      <span class="nav-link">chaos</span>
+      <span class="nav-link">history</span>
+    </div>
+    <div class="nav-right">
+      <div class="nav-tag" style="color:rgba(255,255,255,.12)">·</div>
+      <button class="back-btn" onclick="goTo('s-land')">← profiles</button>
+    </div>
+  </nav>
+  <div class="preview-box" style="position:relative;z-index:10">
+    <svg viewBox="0 0 1200 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="200" fill="#090909"/>
+      <g style="animation: puzzleShift 3s infinite ease-in-out">
+        <line x1="0" y1="50" x2="1200" y2="50" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+        <line x1="0" y1="100" x2="1200" y2="100" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+        <line x1="0" y1="150" x2="1200" y2="150" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+        <line x1="200" y1="0" x2="200" y2="200" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+        <line x1="400" y1="0" x2="400" y2="200" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+        <line x1="600" y1="0" x2="600" y2="200" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+        <line x1="800" y1="0" x2="800" y2="200" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+        <line x1="1000" y1="0" x2="1000" y2="200" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+      </g>
+      <circle cx="200" cy="90" r="50" fill="#111"/><ellipse cx="200" cy="74" rx="24" ry="26" fill="#b8956a"/><rect x="176" y="100" width="48" height="60" rx="4" fill="#1a1a1a"/>
+      <text x="500" y="96" font-family="Georgia,serif" font-size="12" fill="rgba(255,255,255,.08)" font-style="italic">watching again quietly</text>
+    </svg>
+    <div class="preview-box-fg" style="background:linear-gradient(90deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.2) 60%,transparent 100%)"></div>
+    <div class="preview-box-txt">
+      <div style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:3px;color:rgba(255,255,255,.2);margin-bottom:6px">FEATURED · DRAMA</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;font-style:italic;color:rgba(255,255,255,.55)">BoJack Horseman</div>
+      <div style="font-family:'Inter',sans-serif;font-size:11px;color:rgba(255,255,255,.25);margin-top:4px">watching again · organized chaos · 2am</div>
+    </div>
+  </div>
+  <div class="hero" style="position:relative;z-index:10">
+    <div class="eyebrow a1" style="color:rgba(255,255,255,.15);font-size:8px">· &nbsp; · &nbsp; ·</div>
+    <div class="h1 a2" style="font-size:clamp(28px,3.5vw,52px);color:rgba(255,255,255,.55);font-weight:300">I am not always<br><em style="color:rgba(255,255,255,.2);font-size:.88em">what I show.</em></div>
+    <div class="hdesc a3" style="color:rgba(255,255,255,.25)">I need space to feel okay again. Half of me is loud. Half is quiet. I feel everything intensely.</div>
+    <div class="hbtns a4"><button class="btn-p" style="background:rgba(255,255,255,.06);border:.5px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);font-size:11px">resume</button></div>
+    <div class="hmeta a4" style="opacity:.1">organized chaos · sensitive · observer</div>
+  </div>
+  <div style="height:20px;position:relative;z-index:10"></div>
+  <div class="rows" style="position:relative;z-index:10">
+    <div class="rb"><div class="rh"><span class="rlbl" style="color:rgba(255,255,255,.18);font-size:9px;letter-spacing:3px">again</span><span class="rline"></span></div>
+    <div class="cs">
+      <div class="sc me-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#0a0a0a"/><circle cx="105" cy="52" r="30" fill="#111"/><ellipse cx="105" cy="42" rx="17" ry="19" fill="#b8956a"/><rect x="88" y="66" width="34" height="44" rx="2" fill="#1a1a1a"/><text x="105" y="120" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,255,255,.16)" font-style="italic">watching again, quietly</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">BoJack Horseman</span><span class="sc-m">2014 · NETFLIX</span></div><div class="sc-bar" style="width:100%;background:rgba(255,255,255,.09)"></div></div>
+      <div class="sc me-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#090909"/><rect x="26" y="13" width="158" height="94" rx="2" fill="#111"/><rect x="38" y="26" width="54" height="5" rx="1" fill="rgba(255,255,255,.06)"/><rect x="38" y="38" width="88" height="5" rx="1" fill="rgba(255,255,255,.04)"/><rect x="38" y="52" width="68" height="5" rx="1" fill="rgba(255,255,255,.05)"/><text x="105" y="120" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(255,255,255,.13)" font-style="italic">still finding things to cry about</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">Hannah Gadsby: Nanette</span><span class="sc-m">2018 · NETFLIX</span></div><div class="sc-bar" style="width:88%;background:rgba(255,255,255,.08)"></div></div>
+      <div class="sc me-ghost"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#080808"/></svg></div>
+      <div class="sc me-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#0a0a0a"/><circle cx="105" cy="52" r="26" fill="#101010"/><ellipse cx="105" cy="43" rx="15" ry="16" fill="#b08968"/><rect x="90" y="63" width="30" height="42" rx="2" fill="#141414"/><text x="105" y="120" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,255,255,.15)" font-style="italic">I know this by heart</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">The Bear</span><span class="sc-m">2022 · HULU</span></div></div>
+    </div></div>
+    <div style="height:28px"></div>
+    <div class="rb"><div class="rh"><span class="rlbl" style="color:rgba(255,255,255,.14);font-size:9px;letter-spacing:3px">half watched</span><span class="rline"></span></div>
+    <div class="cs">
+      <div class="sc me-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#090909"/><circle cx="105" cy="52" r="28" fill="#0f0f0f"/><ellipse cx="105" cy="42" rx="17" ry="18" fill="#b89060"/><rect x="88" y="66" width="34" height="44" rx="2" fill="#121212"/><text x="105" y="120" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,255,255,.13)" font-style="italic">walked away mid scene</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">All of Us Strangers</span><span class="sc-m">2023 · FILM</span></div><div class="sc-bar" style="width:28%;background:rgba(255,255,255,.07)"></div></div>
+      <div class="sc me-ghost"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#080808"/></svg></div>
+      <div class="sc me-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#0a0a0a"/><circle cx="105" cy="52" r="24" fill="#0f0f0f"/><ellipse cx="105" cy="43" rx="14" ry="15" fill="#a88558"/><rect x="91" y="62" width="28" height="38" rx="2" fill="#111"/><text x="105" y="120" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(255,255,255,.12)" font-style="italic">maybe later</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">In Treatment</span><span class="sc-m">2008 · HBO</span></div></div>
+      <div class="sc me-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#090909"/><rect x="26" y="16" width="158" height="88" rx="3" fill="#0e0e0e"/><text x="105" y="68" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="rgba(255,255,255,.09)" font-style="italic">not now</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">Undone</span><span class="sc-m">2019 · AMAZON</span></div></div>
+    </div></div>
+    <div style="height:28px"></div>
+    <div class="rb"><div class="rh"><span class="rlbl" style="color:rgba(255,255,255,.11);font-size:9px;letter-spacing:3px">unfinished</span><span class="rline"></span></div>
+    <div class="cs">
+      <div class="sc me-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#090909"/><circle cx="105" cy="52" r="28" fill="#0e0e0e"/><ellipse cx="105" cy="42" rx="16" ry="17" fill="#b08960"/><rect x="89" y="64" width="32" height="44" rx="2" fill="#111"/><text x="105" y="120" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(255,255,255,.11)" font-style="italic">started crying. stopped.</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">Maid</span><span class="sc-m">2021 · NETFLIX</span></div><div class="sc-bar" style="width:15%;background:rgba(255,255,255,.07)"></div></div>
+      <div class="sc me-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#080808"/><circle cx="105" cy="52" r="26" fill="#0d0d0d"/><ellipse cx="105" cy="42" rx="15" ry="16" fill="#a88558"/><rect x="90" y="62" width="30" height="40" rx="2" fill="#101010"/><text x="105" y="120" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(255,255,255,.1)" font-style="italic">too close to home</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">TEOTFW</span><span class="sc-m">2017 · CH4</span></div></div>
+      <div class="sc me-ghost"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#080808"/></svg></div>
+      <div class="sc me-sc"><svg viewBox="0 0 210 132"><rect width="210" height="132" fill="#090909"/><circle cx="105" cy="52" r="24" fill="#0e0e0e"/><ellipse cx="105" cy="43" rx="14" ry="15" fill="#b08960"/><rect x="91" y="62" width="28" height="40" rx="2" fill="#111"/><text x="105" y="120" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(255,255,255,.1)" font-style="italic">I know how it ends</text></svg><div class="sc-g"></div><div class="sc-i"><span class="sc-t">Euphoria</span><span class="sc-m">2019 · HBO</span></div></div>
+    </div></div>
+    <div style="height:28px;display:flex;align-items:center;position:relative;z-index:10"><span style="font-family:'Space Mono',monospace;font-size:8px;color:rgba(255,255,255,.07);letter-spacing:3px">— organized chaos —</span></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+(function(){
+  let cur = 's-load';
+
+  function show(id, dur, delay){
+    const next = document.getElementById(id);
+    if(!next || id === cur) return;
+
+    // Immediately hide all OTHER screens gracefully to prevent overlap bugs
+    document.querySelectorAll('.scr.visible').forEach(function(scr){
+      if(scr.id !== id){
+        scr.style.transition = 'opacity 0.3s ease';
+        scr.style.opacity = '0';
+        setTimeout(function(){
+          scr.classList.remove('visible');
+          scr.style.transition = '';
+        }, 320);
+      }
+    });
+
+    setTimeout(function(){
+      next.scrollTop = 0;
+      next.style.opacity = '0';
+      next.classList.add('visible');
+
+      // Trigger screen-specific intro animations
+      if(id === 's-f'){
+        next.classList.remove('intro-anim');
+        void next.offsetWidth;
+        next.classList.add('intro-anim');
+      } else if(id === 's-m'){
+        next.classList.remove('intro-anim');
+        void next.offsetWidth;
+        next.classList.add('intro-anim');
+      } else if(id === 's-d'){
+        startCertificates();
+      } else if(id === 's-l'){
+        startHeartBubbles();
+      }
+
+      setTimeout(function(){
+        next.style.transition = 'opacity ' + dur + 'ms ease';
+        next.style.opacity = '1';
+        cur = id;
+        setTimeout(function(){
+          next.style.transition = '';
+        }, dur + 60);
+      }, delay || 20);
+    }, 320);
+  }
+
+  // Daughter: falling degree certificates
+  function startCertificates(){
+    var container = document.getElementById('d-certs');
+    if(!container) return;
+    container.innerHTML = '';
+    var certs = [
+      {text:'B.Sc Honours', sub:'Excellence'},
+      {text:'Certificate', sub:'Achievement'},
+      {text:'Academic Award', sub:'Distinction'},
+      {text:'Diploma', sub:'With Merit'},
+      {text:'Recognition', sub:'Outstanding'},
+    ];
+    for(var i=0;i<14;i++){
+      var el = document.createElement('div');
+      var cert = certs[i % certs.length];
+      var rot = (Math.random()-0.5)*40;
+      var left = Math.random()*90+5;
+      var dur = 6 + Math.random()*6;
+      var delay = Math.random()*8;
+      el.style.cssText = 'position:absolute;left:'+left+'%;top:-80px;--r:'+rot+'deg;--dur:'+dur+'s;--delay:'+delay+'s;animation:certFall '+dur+'s '+delay+'s ease-in infinite;width:52px;height:38px;background:rgba(255,250,220,.08);border:1px solid rgba(200,200,100,.2);border-radius:2px;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;transform:rotate('+rot+'deg)';
+      el.innerHTML = '<div style="font-family:serif;font-size:5px;color:rgba(200,210,255,.5);text-align:center;letter-spacing:.5px">'+cert.text+'</div><div style="font-size:4px;color:rgba(200,200,150,.3);letter-spacing:.5px">'+cert.sub+'</div>';
+      container.appendChild(el);
+    }
+  }
+
+  // Lover: heart bubbles rising
+  function startHeartBubbles(){
+    var container = document.getElementById('l-hearts');
+    if(!container) return;
+    container.innerHTML = '';
+    var hearts = ['♥','♡','💕','♥','♡'];
+    for(var i=0;i<18;i++){
+      var el = document.createElement('div');
+      var sz = (12+Math.random()*18)+'px';
+      var left = Math.random()*96+2;
+      var dur = 3+Math.random()*5;
+      var delay = Math.random()*8;
+      var r = (Math.random()-0.5)*60;
+      el.style.cssText = '--sz:'+sz+';--dur:'+dur+'s;--delay:'+delay+'s;--r:'+r+'deg;left:'+left+'%;';
+      el.className = 'heart-bubble';
+      el.textContent = hearts[i%hearts.length];
+      container.appendChild(el);
+    }
+  }
+
+  // loading → landing
+  setTimeout(function(){ show('s-land', 700, 0); }, 2400);
+
+  // profile card clicks
+  document.querySelectorAll('.pc[data-to]').forEach(function(el){
+    el.addEventListener('click', function(){
+      document.querySelectorAll('.pc').forEach(function(p){ p.classList.remove('last-on'); });
+      this.classList.add('last-on');
+      var target = this.getAttribute('data-to');
+      var timings = { 's-d': 900, 's-f': 200, 's-l': 700, 's-m': 800 };
+      show(target, timings[target] || 600, target === 's-m' ? 400 : 0);
+    });
+  });
+
+  // back buttons
+  document.querySelectorAll('.back-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){ show('s-land', 500, 0); });
+  });
+
+  // Show card hover: expand micro-animation
+  document.querySelectorAll('.sc').forEach(function(card){
+    card.addEventListener('mouseenter', function(){
+      this.style.zIndex = '20';
+    });
+    card.addEventListener('mouseleave', function(){
+      this.style.zIndex = '';
+    });
+  });
+
+  // parallax
+  document.addEventListener('mousemove', function(e){
+    var mx = (e.clientX / window.innerWidth - 0.5) * 2;
+    var my = (e.clientY / window.innerHeight - 0.5) * 2;
+    var active = document.getElementById(cur);
+    if(active){
+      active.querySelectorAll('.pc-art, .feat svg').forEach(function(a){
+        a.style.transform = 'translate(' + (mx*4) + 'px,' + (my*3) + 'px) scale(1.06)';
+      });
+    }
+  }, {passive:true});
+
+  // friend scroll blur
+  document.querySelectorAll('#s-f .cs').forEach(function(row){
+    var t;
+    row.addEventListener('scroll', function(){
+      row.style.filter = 'blur(0.4px)';
+      clearTimeout(t);
+      t = setTimeout(function(){ row.style.filter = ''; }, 130);
+    }, {passive:true});
+  });
+
+  // particles on landing
+  var pc = document.getElementById('ptcls');
+  if(pc){
+    for(var i=0;i<20;i++){
+      var d = document.createElement('div');
+      var sz = Math.random()*2.5+1;
+      var pink = Math.random()>.5;
+      d.style.cssText = 'position:absolute;width:'+sz+'px;height:'+sz+'px;border-radius:50%;left:'+Math.floor(Math.random()*100)+'%;top:'+Math.floor(Math.random()*100)+'%;background:rgba('+(pink?'255,100,160':'100,140,255')+','+(0.12+Math.random()*.2)+');animation:starFloat '+(4+Math.random()*5)+'s '+(Math.random()*5)+'s ease-in-out infinite';
+      pc.appendChild(d);
+    }
+  }
+
+  window.goTo = function(id){ show(id, 500, 0); };
+})();
+</script>
